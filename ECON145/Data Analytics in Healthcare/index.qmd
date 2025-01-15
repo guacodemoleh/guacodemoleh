@@ -1,0 +1,14 @@
+---
+title: "Data Analytics in Healthcare"
+author: Victoria Grace ANN
+---
+
+This website would document my learning journey for the course *ECON145 Introduction to Data Analytics in Healthcare*, conducted by Dr. Sean Lam. Health-related data may be derived from patients, hospitals, insurance companies, households, and government entities. The key objectives I hope to attain by the end of the course are:
+
+-   Having a fundamental understanding of applying statistical concepts, visualisation, and commonly-used data mining techniques to address healthcare issues;
+
+-   Develop data-driven solutions while learning how analytic problems in the industry are formed;
+
+-   Equipped with analytical tools to uncover data insights; and
+
+-   Manage healthcare data and support healthcare organisations in designing evidence-based solutions.
