@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Victoria Grace ANN">
+
+<title>Data Analytics in Healthcare - Introduction to Data Wrangling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Data Analytics in Healthcare</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Hands-on Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercises">    
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Introduction.html" rel="" target="">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data-manipulation-packages" id="toc-data-manipulation-packages" class="nav-link" data-scroll-target="#data-manipulation-packages">Data Manipulation Packages</a></li>
+  <li><a href="#understanding-the-data" id="toc-understanding-the-data" class="nav-link" data-scroll-target="#understanding-the-data">Understanding the Data</a>
+  <ul class="collapse">
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a>
+  <ul class="collapse">
+  <li><a href="#method-1.-using-dplyr" id="toc-method-1.-using-dplyr" class="nav-link" data-scroll-target="#method-1.-using-dplyr">Method 1. Using dplyr</a></li>
+  <li><a href="#method-2.-using-baser" id="toc-method-2.-using-baser" class="nav-link" data-scroll-target="#method-2.-using-baser">Method 2. Using baseR</a></li>
+  </ul></li>
+  <li><a href="#data-manipulation" id="toc-data-manipulation" class="nav-link" data-scroll-target="#data-manipulation">Data Manipulation</a></li>
+  <li><a href="#outlier-detection-with-boxplot" id="toc-outlier-detection-with-boxplot" class="nav-link" data-scroll-target="#outlier-detection-with-boxplot">Outlier Detection with boxplot</a>
+  <ul class="collapse">
+  <li><a href="#tukey-fence-method" id="toc-tukey-fence-method" class="nav-link" data-scroll-target="#tukey-fence-method">Tukey Fence Method</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Introduction to Data Wrangling</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Victoria Grace ANN </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>To start the course, this exercise would be a good refresher for me after not touching R for a few months.</p>
+</section>
+<section id="data-manipulation-packages" class="level1">
+<h1>Data Manipulation Packages</h1>
+<p>In R, <code>dplyr</code> and <code>tidyr</code> are simple yet powerful packages to manage data manipulation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(dplyr, tidyr, ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Within the core tidyverse library, the core packages used for data wrangling are</p>
+<ul>
+<li><p><code>ggplot2</code> : For data visualisation, plotting graphs</p></li>
+<li><p><code>dplyr</code> : For data manipulation, such as filtering, selecting, mutating, summarising and arranging data</p></li>
+<li><p><code>tidyr</code> : For organising data to ensure datasets can be manipulated easily</p></li>
+</ul>
+</section>
+<section id="understanding-the-data" class="level1">
+<h1>Understanding the Data</h1>
+<p>This exercise will leverage World Bank’s 2023 data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"2023_WorldBank.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Country.Name Country.Code                          Indicator.Name
+1 Hong Kong SAR, China          HKG Life expectancy at birth, total (years)
+2     Macao SAR, China          MAC Life expectancy at birth, total (years)
+3                Japan          JPN Life expectancy at birth, total (years)
+4        Liechtenstein          LIE Life expectancy at birth, total (years)
+5          Switzerland          CHE Life expectancy at birth, total (years)
+6          Korea, Rep.          KOR Life expectancy at birth, total (years)
+  Indicator.Code    X1960    X1961    X1962    X1963    X1964    X1965    X1966
+1 SP.DYN.LE00.IN 65.86629 66.55888 66.97717 67.68573 68.44610 69.25122 69.53888
+2 SP.DYN.LE00.IN 64.96500 65.48500 65.94600 66.38600 66.80000 67.19900 67.64700
+3 SP.DYN.LE00.IN 67.69561 68.35195 68.63488 69.71244 70.20659 70.26683 70.91585
+4 SP.DYN.LE00.IN       NA       NA       NA       NA       NA       NA       NA
+5 SP.DYN.LE00.IN 71.31341 71.64488 71.19610 71.18756 72.07780 72.20171 72.33561
+6 SP.DYN.LE00.IN 54.32024 54.92400 55.51951 55.97488 57.17478 58.24049 59.50471
+     X1967    X1968    X1969    X1970    X1971    X1972    X1973    X1974
+1 69.92544 70.35583 70.56856 71.04995 71.45854 71.45610 72.10976 72.61220
+2 68.02800 68.44000 68.84500 69.19800 69.58200 70.04400 70.56800 70.99500
+3 71.46610 71.61098 71.85805 71.91976 72.80902 73.15366 73.29512 73.67220
+4       NA       NA       NA       NA       NA       NA       NA       NA
+5 72.63659 72.59024 72.61268 73.02024 73.13073 73.64439 73.94098 74.28707
+6 61.28812 61.55900 62.05102 62.16341 62.61220 63.00976 63.40732 63.80488
+     X1975    X1976    X1977    X1978    X1979    X1980    X1981    X1982
+1 73.36829 72.81951 73.31951 73.57561 73.67317 74.67317 75.32439 75.42927
+2 71.41900 71.85000 72.26300 72.69000 73.07000 73.50400 73.93200 74.34200
+3 74.24707 74.68659 75.25585 75.58463 76.10878 75.98902 76.39488 76.87366
+4       NA       NA       NA       NA       NA       NA       NA       NA
+5 74.66561 74.78537 75.23805 75.18732 75.46610 75.45927 75.69317 76.03390
+6 64.15366 64.50244 64.90000 65.19756 65.54634 66.04634 66.54634 67.09512
+     X1983    X1984    X1985    X1986    X1987    X1988    X1989    X1990
+1 75.27561 76.02927 76.43415 76.68537 76.88293 77.08293 77.02927 77.38049
+2 74.70300 75.08000 75.47800 75.86200 76.27200 76.60300 77.03500 77.42400
+3 76.92195 77.29122 77.56049 78.01049 78.42951 78.34976 78.76854 78.83707
+4       NA       NA       NA       NA       NA       NA       NA       NA
+5 76.03122 76.60854 76.73366 76.89902 77.19756 77.22659 77.42122 77.24244
+6 67.54634 68.19512 68.79512 69.44634 69.99756 70.54878 71.04878 71.59756
+     X1991    X1992    X1993    X1994    X1995    X1996    X1997    X1998
+1 77.88293 77.67805 78.03171 78.52927 78.68293 79.62683 80.12683 80.13171
+2 77.90400 78.28000 78.63000 78.99300 79.34900 79.97100 80.16200 80.35200
+3 79.03683 79.08024 79.30366 79.69683 79.53610 80.21976 80.42415 80.50146
+4       NA       NA       NA 78.42195 77.39024 76.83659 76.04634 77.74634
+5 77.51463 77.80610 78.08537 78.35000 78.41707 78.89610 79.07951 79.32439
+6 72.04634 72.49756 72.99756 73.39756 73.70000 74.15122 74.60244 75.00488
+     X1999    X2000    X2001    X2002    X2003    X2004    X2005    X2006
+1 80.38293 80.87805 81.42439 81.42683 81.37805 81.82927 81.62927 82.37561
+2 80.65200 80.95900 81.17900 81.29300 81.50100 81.69100 82.03300 82.25700
+3 80.46098 81.07610 81.41634 81.69073 81.76000 82.03024 81.95512 82.32195
+4 79.10976 76.82683 79.27561 79.63659 79.96098 81.77073 80.66829 80.94878
+5 79.58049 79.68049 80.18049 80.38537 80.53659 81.08780 81.23659 81.49024
+6 75.40976 75.90976 76.41220 76.76585 77.21463 77.66585 78.16829 78.66829
+     X2007    X2008    X2009    X2010    X2011    X2012    X2013    X2014
+1 82.32683 82.37561 82.77561 82.97805 83.42195 83.48049 83.83171 83.98049
+2 82.54300 82.89300 83.27600 83.10900 83.22900 83.32600 83.72700 83.88300
+3 82.50707 82.58756 82.93146 82.84268 82.59122 83.09610 83.33195 83.58780
+4 81.29512 82.68293 81.50000 81.84146 81.79268 82.38293 82.26098 82.07317
+5 81.74146 81.99268 82.04390 82.24634 82.69512 82.69756 82.79756 83.19756
+6 79.11951 79.51707 79.96829 80.11707 80.56829 80.81951 81.27073 81.72195
+     X2015    X2016    X2017    X2018    X2019    X2020    X2021
+1 84.27805 84.22683 84.68049 84.93415 85.18049 85.49756 85.49268
+2 83.98400 84.23100 84.56300 84.92800 84.97800 85.18400 85.39900
+3 83.79390 83.98488 84.09976 84.21098 84.35634 84.56000 84.44561
+4 82.65610 82.25854 83.74634 83.04146 84.16098 81.65854 84.40244
+5 82.89756 83.60244 83.55122 83.75366 83.90488 83.00000 83.85122
+6 82.02439 82.27561 82.62683 82.62683 83.22683 83.42683 83.52683</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   266 obs. of  66 variables:
+ $ Country.Name  : chr  "Hong Kong SAR, China" "Macao SAR, China" "Japan" "Liechtenstein" ...
+ $ Country.Code  : chr  "HKG" "MAC" "JPN" "LIE" ...
+ $ Indicator.Name: chr  "Life expectancy at birth, total (years)" "Life expectancy at birth, total (years)" "Life expectancy at birth, total (years)" "Life expectancy at birth, total (years)" ...
+ $ Indicator.Code: chr  "SP.DYN.LE00.IN" "SP.DYN.LE00.IN" "SP.DYN.LE00.IN" "SP.DYN.LE00.IN" ...
+ $ X1960         : num  65.9 65 67.7 NA 71.3 ...
+ $ X1961         : num  66.6 65.5 68.4 NA 71.6 ...
+ $ X1962         : num  67 65.9 68.6 NA 71.2 ...
+ $ X1963         : num  67.7 66.4 69.7 NA 71.2 ...
+ $ X1964         : num  68.4 66.8 70.2 NA 72.1 ...
+ $ X1965         : num  69.3 67.2 70.3 NA 72.2 ...
+ $ X1966         : num  69.5 67.6 70.9 NA 72.3 ...
+ $ X1967         : num  69.9 68 71.5 NA 72.6 ...
+ $ X1968         : num  70.4 68.4 71.6 NA 72.6 ...
+ $ X1969         : num  70.6 68.8 71.9 NA 72.6 ...
+ $ X1970         : num  71 69.2 71.9 NA 73 ...
+ $ X1971         : num  71.5 69.6 72.8 NA 73.1 ...
+ $ X1972         : num  71.5 70 73.2 NA 73.6 ...
+ $ X1973         : num  72.1 70.6 73.3 NA 73.9 ...
+ $ X1974         : num  72.6 71 73.7 NA 74.3 ...
+ $ X1975         : num  73.4 71.4 74.2 NA 74.7 ...
+ $ X1976         : num  72.8 71.8 74.7 NA 74.8 ...
+ $ X1977         : num  73.3 72.3 75.3 NA 75.2 ...
+ $ X1978         : num  73.6 72.7 75.6 NA 75.2 ...
+ $ X1979         : num  73.7 73.1 76.1 NA 75.5 ...
+ $ X1980         : num  74.7 73.5 76 NA 75.5 ...
+ $ X1981         : num  75.3 73.9 76.4 NA 75.7 ...
+ $ X1982         : num  75.4 74.3 76.9 NA 76 ...
+ $ X1983         : num  75.3 74.7 76.9 NA 76 ...
+ $ X1984         : num  76 75.1 77.3 NA 76.6 ...
+ $ X1985         : num  76.4 75.5 77.6 NA 76.7 ...
+ $ X1986         : num  76.7 75.9 78 NA 76.9 ...
+ $ X1987         : num  76.9 76.3 78.4 NA 77.2 ...
+ $ X1988         : num  77.1 76.6 78.3 NA 77.2 ...
+ $ X1989         : num  77 77 78.8 NA 77.4 ...
+ $ X1990         : num  77.4 77.4 78.8 NA 77.2 ...
+ $ X1991         : num  77.9 77.9 79 NA 77.5 ...
+ $ X1992         : num  77.7 78.3 79.1 NA 77.8 ...
+ $ X1993         : num  78 78.6 79.3 NA 78.1 ...
+ $ X1994         : num  78.5 79 79.7 78.4 78.3 ...
+ $ X1995         : num  78.7 79.3 79.5 77.4 78.4 ...
+ $ X1996         : num  79.6 80 80.2 76.8 78.9 ...
+ $ X1997         : num  80.1 80.2 80.4 76 79.1 ...
+ $ X1998         : num  80.1 80.4 80.5 77.7 79.3 ...
+ $ X1999         : num  80.4 80.7 80.5 79.1 79.6 ...
+ $ X2000         : num  80.9 81 81.1 76.8 79.7 ...
+ $ X2001         : num  81.4 81.2 81.4 79.3 80.2 ...
+ $ X2002         : num  81.4 81.3 81.7 79.6 80.4 ...
+ $ X2003         : num  81.4 81.5 81.8 80 80.5 ...
+ $ X2004         : num  81.8 81.7 82 81.8 81.1 ...
+ $ X2005         : num  81.6 82 82 80.7 81.2 ...
+ $ X2006         : num  82.4 82.3 82.3 80.9 81.5 ...
+ $ X2007         : num  82.3 82.5 82.5 81.3 81.7 ...
+ $ X2008         : num  82.4 82.9 82.6 82.7 82 ...
+ $ X2009         : num  82.8 83.3 82.9 81.5 82 ...
+ $ X2010         : num  83 83.1 82.8 81.8 82.2 ...
+ $ X2011         : num  83.4 83.2 82.6 81.8 82.7 ...
+ $ X2012         : num  83.5 83.3 83.1 82.4 82.7 ...
+ $ X2013         : num  83.8 83.7 83.3 82.3 82.8 ...
+ $ X2014         : num  84 83.9 83.6 82.1 83.2 ...
+ $ X2015         : num  84.3 84 83.8 82.7 82.9 ...
+ $ X2016         : num  84.2 84.2 84 82.3 83.6 ...
+ $ X2017         : num  84.7 84.6 84.1 83.7 83.6 ...
+ $ X2018         : num  84.9 84.9 84.2 83 83.8 ...
+ $ X2019         : num  85.2 85 84.4 84.2 83.9 ...
+ $ X2020         : num  85.5 85.2 84.6 81.7 83 ...
+ $ X2021         : num  85.5 85.4 84.4 84.4 83.9 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Country.Name"   "Country.Code"   "Indicator.Name" "Indicator.Code"
+ [5] "X1960"          "X1961"          "X1962"          "X1963"         
+ [9] "X1964"          "X1965"          "X1966"          "X1967"         
+[13] "X1968"          "X1969"          "X1970"          "X1971"         
+[17] "X1972"          "X1973"          "X1974"          "X1975"         
+[21] "X1976"          "X1977"          "X1978"          "X1979"         
+[25] "X1980"          "X1981"          "X1982"          "X1983"         
+[29] "X1984"          "X1985"          "X1986"          "X1987"         
+[33] "X1988"          "X1989"          "X1990"          "X1991"         
+[37] "X1992"          "X1993"          "X1994"          "X1995"         
+[41] "X1996"          "X1997"          "X1998"          "X1999"         
+[45] "X2000"          "X2001"          "X2002"          "X2003"         
+[49] "X2004"          "X2005"          "X2006"          "X2007"         
+[53] "X2008"          "X2009"          "X2010"          "X2011"         
+[57] "X2012"          "X2013"          "X2014"          "X2015"         
+[61] "X2016"          "X2017"          "X2018"          "X2019"         
+[65] "X2020"          "X2021"         </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Country.Name       Country.Code       Indicator.Name     Indicator.Code    
+ Length:266         Length:266         Length:266         Length:266        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     X1960           X1961           X1962           X1963      
+ Min.   :28.66   Min.   :28.84   Min.   :29.12   Min.   :28.83  
+ 1st Qu.:43.93   1st Qu.:45.34   1st Qu.:45.80   1st Qu.:46.17  
+ Median :53.72   Median :54.32   Median :55.09   Median :55.57  
+ Mean   :53.55   Mean   :54.19   Mean   :54.83   Mean   :55.13  
+ 3rd Qu.:64.18   3rd Qu.:64.51   3rd Qu.:64.58   3rd Qu.:64.90  
+ Max.   :73.76   Max.   :73.65   Max.   :73.72   Max.   :73.56  
+ NA's   :14      NA's   :13      NA's   :13      NA's   :14     
+     X1964           X1965           X1966           X1967      
+ Min.   :30.42   Min.   :29.29   Min.   :26.08   Min.   :26.41  
+ 1st Qu.:47.36   1st Qu.:47.62   1st Qu.:48.17   1st Qu.:48.09  
+ Median :56.17   Median :56.84   Median :57.39   Median :57.83  
+ Mean   :55.74   Mean   :56.00   Mean   :56.44   Mean   :56.86  
+ 3rd Qu.:65.35   3rd Qu.:65.96   3rd Qu.:66.07   3rd Qu.:66.52  
+ Max.   :73.73   Max.   :73.87   Max.   :74.08   Max.   :74.12  
+ NA's   :14      NA's   :14      NA's   :13      NA's   :13     
+     X1968           X1969           X1970           X1971      
+ Min.   :26.71   Min.   :26.09   Min.   :26.40   Min.   :26.00  
+ 1st Qu.:48.44   1st Qu.:49.17   1st Qu.:49.44   1st Qu.:49.50  
+ Median :58.01   Median :58.38   Median :58.63   Median :59.35  
+ Mean   :57.18   Mean   :57.42   Mean   :57.74   Mean   :58.05  
+ 3rd Qu.:66.76   3rd Qu.:66.70   3rd Qu.:67.48   3rd Qu.:67.97  
+ Max.   :74.01   Max.   :74.08   Max.   :74.65   Max.   :74.62  
+ NA's   :13      NA's   :13      NA's   :13      NA's   :13     
+     X1972           X1973           X1974           X1975      
+ Min.   :25.61   Min.   :34.56   Min.   :35.43   Min.   :11.99  
+ 1st Qu.:49.92   1st Qu.:51.08   1st Qu.:51.84   1st Qu.:52.52  
+ Median :59.80   Median :60.27   Median :60.80   Median :61.08  
+ Mean   :58.55   Mean   :59.16   Mean   :59.42   Mean   :59.68  
+ 3rd Qu.:68.32   3rd Qu.:68.51   3rd Qu.:68.78   3rd Qu.:69.17  
+ Max.   :74.72   Max.   :74.87   Max.   :74.98   Max.   :75.58  
+ NA's   :13      NA's   :12      NA's   :13      NA's   :13     
+     X1976           X1977           X1978           X1979      
+ Min.   :12.01   Min.   :24.43   Min.   :21.84   Min.   :22.53  
+ 1st Qu.:52.29   1st Qu.:53.37   1st Qu.:53.49   1st Qu.:54.05  
+ Median :61.64   Median :62.15   Median :62.53   Median :62.89  
+ Mean   :59.95   Mean   :60.59   Mean   :60.98   Mean   :61.31  
+ 3rd Qu.:69.39   3rd Qu.:69.74   3rd Qu.:69.99   3rd Qu.:69.73  
+ Max.   :76.97   Max.   :76.37   Max.   :76.65   Max.   :76.77  
+ NA's   :13      NA's   :13      NA's   :11      NA's   :12     
+     X1980           X1981           X1982           X1983      
+ Min.   :28.45   Min.   :29.57   Min.   :30.82   Min.   :31.64  
+ 1st Qu.:54.71   1st Qu.:55.38   1st Qu.:54.89   1st Qu.:56.33  
+ Median :63.36   Median :63.83   Median :64.17   Median :64.63  
+ Mean   :61.74   Mean   :62.09   Mean   :62.33   Mean   :62.62  
+ 3rd Qu.:70.01   3rd Qu.:70.36   3rd Qu.:70.44   3rd Qu.:70.51  
+ Max.   :76.85   Max.   :76.52   Max.   :77.04   Max.   :76.92  
+ NA's   :11      NA's   :11      NA's   :11      NA's   :11     
+     X1984           X1985           X1986           X1987      
+ Min.   :32.67   Min.   :33.15   Min.   :33.63   Min.   :21.91  
+ 1st Qu.:56.41   1st Qu.:56.93   1st Qu.:57.55   1st Qu.:57.60  
+ Median :65.24   Median :65.69   Median :66.14   Median :66.43  
+ Mean   :62.93   Mean   :63.22   Mean   :63.67   Mean   :63.93  
+ 3rd Qu.:70.76   3rd Qu.:70.98   3rd Qu.:71.42   3rd Qu.:71.50  
+ Max.   :77.58   Max.   :77.60   Max.   :78.01   Max.   :78.43  
+ NA's   :11      NA's   :11      NA's   :10      NA's   :10     
+     X1988           X1989           X1990           X1991      
+ Min.   :12.41   Min.   :29.68   Min.   :29.93   Min.   :26.57  
+ 1st Qu.:57.77   1st Qu.:58.32   1st Qu.:58.72   1st Qu.:59.05  
+ Median :66.91   Median :67.28   Median :67.63   Median :67.77  
+ Mean   :64.04   Mean   :64.52   Mean   :64.72   Mean   :64.84  
+ 3rd Qu.:71.61   3rd Qu.:71.76   3rd Qu.:71.95   3rd Qu.:72.15  
+ Max.   :78.35   Max.   :78.77   Max.   :78.84   Max.   :79.04  
+ NA's   :10      NA's   :10      NA's   :8       NA's   :9      
+     X1992           X1993           X1994           X1995      
+ Min.   :22.72   Min.   :22.70   Min.   :14.10   Min.   :30.95  
+ 1st Qu.:58.55   1st Qu.:58.42   1st Qu.:59.17   1st Qu.:59.52  
+ Median :67.83   Median :67.72   Median :67.84   Median :68.17  
+ Mean   :64.86   Mean   :65.07   Mean   :65.38   Mean   :65.57  
+ 3rd Qu.:72.31   3rd Qu.:72.45   3rd Qu.:72.58   3rd Qu.:72.54  
+ Max.   :79.08   Max.   :79.30   Max.   :79.70   Max.   :79.54  
+ NA's   :9       NA's   :9       NA's   :8       NA's   :7      
+     X1996           X1997           X1998           X1999      
+ Min.   :31.30   Min.   :32.24   Min.   :18.39   Min.   :42.07  
+ 1st Qu.:60.07   1st Qu.:60.62   1st Qu.:60.61   1st Qu.:60.80  
+ Median :68.73   Median :68.94   Median :69.10   Median :69.35  
+ Mean   :65.79   Mean   :66.01   Mean   :66.10   Mean   :66.48  
+ 3rd Qu.:72.84   3rd Qu.:73.08   3rd Qu.:73.48   3rd Qu.:73.67  
+ Max.   :80.22   Max.   :80.42   Max.   :80.66   Max.   :81.53  
+ NA's   :8       NA's   :8       NA's   :8       NA's   :8      
+     X2000           X2001           X2002           X2003      
+ Min.   :44.52   Min.   :41.96   Min.   :44.49   Min.   :43.35  
+ 1st Qu.:60.90   1st Qu.:60.85   1st Qu.:61.24   1st Qu.:61.70  
+ Median :69.74   Median :69.89   Median :70.32   Median :70.31  
+ Mean   :66.95   Mean   :67.26   Mean   :67.53   Mean   :67.82  
+ 3rd Qu.:74.04   3rd Qu.:74.39   3rd Qu.:74.71   3rd Qu.:74.88  
+ Max.   :81.37   Max.   :81.42   Max.   :81.69   Max.   :81.76  
+ NA's   :7       NA's   :8       NA's   :8       NA's   :8      
+     X2004           X2005           X2006           X2007      
+ Min.   :42.54   Min.   :42.12   Min.   :42.91   Min.   :43.12  
+ 1st Qu.:61.78   1st Qu.:62.14   1st Qu.:62.55   1st Qu.:62.80  
+ Median :70.70   Median :71.04   Median :71.13   Median :71.27  
+ Mean   :68.18   Mean   :68.50   Mean   :68.87   Mean   :69.18  
+ 3rd Qu.:75.43   3rd Qu.:75.48   3rd Qu.:75.82   3rd Qu.:75.86  
+ Max.   :82.03   Max.   :82.03   Max.   :82.38   Max.   :82.54  
+ NA's   :8       NA's   :7       NA's   :8       NA's   :8      
+     X2008           X2009           X2010           X2011      
+ Min.   :43.57   Min.   :44.03   Min.   :45.60   Min.   :46.69  
+ 1st Qu.:63.24   1st Qu.:63.84   1st Qu.:64.09   1st Qu.:64.67  
+ Median :71.47   Median :71.83   Median :72.12   Median :72.37  
+ Mean   :69.50   Mean   :69.91   Mean   :70.22   Mean   :70.62  
+ 3rd Qu.:76.36   3rd Qu.:76.59   3rd Qu.:76.73   3rd Qu.:76.76  
+ Max.   :82.89   Max.   :83.28   Max.   :83.11   Max.   :83.42  
+ NA's   :8       NA's   :8       NA's   :8       NA's   :8      
+     X2012           X2013           X2014           X2015      
+ Min.   :47.84   Min.   :49.00   Min.   :50.03   Min.   :51.10  
+ 1st Qu.:64.97   1st Qu.:65.09   1st Qu.:65.36   1st Qu.:65.74  
+ Median :72.43   Median :72.70   Median :72.86   Median :72.99  
+ Mean   :70.92   Mean   :71.19   Mean   :71.47   Mean   :71.67  
+ 3rd Qu.:77.06   3rd Qu.:77.14   3rd Qu.:77.40   3rd Qu.:77.48  
+ Max.   :83.48   Max.   :83.83   Max.   :83.98   Max.   :84.28  
+ NA's   :8       NA's   :8       NA's   :8       NA's   :8      
+     X2016           X2017           X2018           X2019      
+ Min.   :52.04   Min.   :52.30   Min.   :52.55   Min.   :52.91  
+ 1st Qu.:66.01   1st Qu.:66.58   1st Qu.:66.53   1st Qu.:66.99  
+ Median :73.20   Median :73.56   Median :73.57   Median :73.56  
+ Mean   :71.97   Mean   :72.20   Mean   :72.41   Mean   :72.63  
+ 3rd Qu.:77.65   3rd Qu.:77.79   3rd Qu.:77.91   3rd Qu.:78.00  
+ Max.   :84.23   Max.   :84.68   Max.   :84.93   Max.   :85.18  
+ NA's   :8       NA's   :8       NA's   :9       NA's   :9      
+     X2020           X2021      
+ Min.   :52.78   Min.   :52.52  
+ 1st Qu.:66.77   1st Qu.:66.07  
+ Median :72.58   Median :71.90  
+ Mean   :71.98   Mean   :71.37  
+ 3rd Qu.:76.99   3rd Qu.:76.46  
+ Max.   :85.50   Max.   :85.49  
+ NA's   :9       NA's   :9      </code></pre>
+</div>
+</div>
+<section id="data-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
+<p>Some columns are not meaningful for analysis. Hence, columns “Country.Code”,“Indicator.Name”, “Indicator.Code” can be dropped.</p>
+<section id="method-1.-using-dplyr" class="level3">
+<h3 class="anchored" data-anchor-id="method-1.-using-dplyr">Method 1. Using dplyr</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">select</span>(data, <span class="sc">-</span><span class="fu">c</span>(Country.Code, Indicator.Name, Indicator.Code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="method-2.-using-baser" class="level3">
+<h3 class="anchored" data-anchor-id="method-2.-using-baser">Method 2. Using baseR</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[, <span class="sc">!</span><span class="fu">names</span>(data) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Country.Code"</span>, <span class="st">"Indicator.Name"</span>, <span class="st">"Indicator.Code"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The data appears to be in wide format, each year is in a column. We can use <code>tidyr</code> to make this into a tidy data and recode column names as the year of observation.</p>
+<p><code>tidyr</code> is another R package from the tidyverse family, designed to help users clean and organise data into a tidy format. The primary goal of <code>tidyr</code> is to make data “tidy,” such that each variable is a column, each observation is a row, and each value is a single cell. <code>tidyr</code> works closely with other packages like <code>dplyr</code> to simplify data manipulation workflows.</p>
+<p>Key functions of <code>tidyr</code> include:</p>
+<ul>
+<li><p><code>gather()</code> / <code>pivot_longer()</code>: Converts wide data (where columns are variables) into long format (where each row represents a single observation of a variable)</p></li>
+<li><p><code>spread()</code> / <code>pivot_wider()</code>: The reverse of pivot_longer(), it converts long data into wide format</p></li>
+<li><p><code>separate()</code>: Splits a single column into multiple columns based on a delimiter.</p></li>
+<li><p><code>unite()</code>: Combines multiple columns into a single column.</p></li>
+</ul>
+<p>Pivot to tidy format where each <strong>Column is a Variable</strong> and <strong>each Row is an Observation</strong> (Life Expentancy):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(data,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">cols =</span> X1960<span class="sc">:</span>X2021, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">names_to =</span> <span class="st">"Year"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">values_to =</span> <span class="st">"Life.Exp"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The ‘Year’ column will have year names as characters starting with X. We remove the “X” and convert them to integers</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_long<span class="sc">$</span>Year <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">sub</span>(<span class="st">"X"</span>, <span class="st">""</span>, data_long<span class="sc">$</span>Year))  </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(data_long) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [16,492 × 3] (S3: tbl_df/tbl/data.frame)
+ $ Country.Name: chr [1:16492] "Hong Kong SAR, China" "Hong Kong SAR, China" "Hong Kong SAR, China" "Hong Kong SAR, China" ...
+ $ Year        : int [1:16492] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+ $ Life.Exp    : num [1:16492] 65.9 66.6 67 67.7 68.4 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Country.Name" "Year"         "Life.Exp"    </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="data-manipulation" class="level2">
+<h2 class="anchored" data-anchor-id="data-manipulation">Data Manipulation</h2>
+<p><code>dplyr</code> is an R package used for data manipulation and transformation. It is part of the tidyverse, a collection of R packages designed for data science. <code>dplyr</code> provides a set of functions that make it easier to work with data frames and manipulate them in a clear, concise, and efficient way.</p>
+<p>The key features of dplyr include:</p>
+<ul>
+<li><p>Pipes (<code>%&gt;%</code>): Allows chaining multiple operations in a readable manner.</p></li>
+<li><p>Core Functions:</p>
+<ul>
+<li><p><code>select()</code>: Choose columns.</p></li>
+<li><p><code>filter()</code>: Filter rows based on conditions.</p></li>
+<li><p><code>mutate()</code>: Create new columns or modify existing ones.</p></li>
+<li><p><code>summarize()</code>: Aggregate data, often combined with group_by() to create group-wise summaries.</p></li>
+<li><p><code>group_by()</code>: Group data by one or more variables, which is useful for applying functions like <code>summarize()</code>.</p></li>
+</ul></li>
+</ul>
+<p>Check for any missing values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data_long <span class="sc">%&gt;%</span>   <span class="fu">summarise_all</span>(<span class="sc">~</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(.)))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  Country.Name  Year Life.Exp
+         &lt;int&gt; &lt;int&gt;    &lt;int&gt;
+1            0     0      626</code></pre>
+</div>
+</div>
+<p>There are 626 rows with missing values for <em>Life.Exp</em>. We can check the unique values for <em>Country.Name</em> and <em>Year</em> first.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data_long<span class="sc">$</span>Country.Name) </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] "Hong Kong SAR, China"                                </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   [2] "Macao SAR, China"                                    </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] "Japan"                                               </span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="do">##   [4] "Liechtenstein"                                       </span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5] "Switzerland"                                         </span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   [6] "Korea, Rep."                                         </span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="do">##   [7] "Faroe Islands"                                       </span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="do">##   [8] "Singapore"                                           </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9] "Australia"                                           </span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  [10] "Spain"                                               </span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] "Norway"                                              </span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  [12] "Sweden"                                              </span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  [13] "Iceland"                                             </span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  [14] "Malta"                                               </span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  [15] "Italy"                                               </span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  [16] "Luxembourg"                                          </span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  [17] "Canada"                                              </span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  [18] "Israel"                                              </span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  [19] "France"                                              </span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="do">##  [20] "New Zealand"                                         </span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="do">##  [21] "Ireland"                                             </span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  [22] "Finland"                                             </span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [23] "Belgium"                                             </span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [24] "Euro area"                                           </span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] "Netherlands"                                         </span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  [26] "Denmark"                                             </span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  [27] "Austria"                                             </span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  [28] "Channel Islands"                                     </span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  [29] "Cyprus"                                              </span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  [30] "Portugal"                                            </span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="do">##  [31] "Germany"                                             </span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="do">##  [32] "Slovenia"                                            </span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="do">##  [33] "United Kingdom"                                      </span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="do">##  [34] "Isle of Man"                                         </span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="do">##  [35] "European Union"                                      </span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  [36] "St. Martin (French part)"                            </span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="do">##  [37] "Greece"                                              </span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  [38] "Puerto Rico"                                         </span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="do">##  [39] "Virgin Islands (U.S.)"                               </span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="do">##  [40] "High income"                                         </span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="do">##  [41] "Maldives"                                            </span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="do">##  [42] "Post-demographic dividend"                           </span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="do">##  [43] "French Polynesia"                                    </span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  [44] "Gibraltar"                                           </span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [45] "Bermuda"                                             </span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [46] "Qatar"                                               </span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [47] "New Caledonia"                                       </span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [48] "Chile"                                               </span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="do">##  [49] "Bahrain"                                             </span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="do">##  [50] "Thailand"                                            </span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="do">##  [51] "OECD members"                                        </span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="do">##  [52] "United Arab Emirates"                                </span></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  [53] "Kuwait"                                              </span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  [54] "Antigua and Barbuda"                                 </span></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  [55] "China"                                               </span></span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  [56] "Barbados"                                            </span></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  [57] "Czechia"                                             </span></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  [58] "Costa Rica"                                          </span></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [59] "North America"                                       </span></span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  [60] "Saudi Arabia"                                        </span></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  [61] "Kosovo"                                              </span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="do">##  [62] "Estonia"                                             </span></span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a><span class="do">##  [63] "Guam"                                                </span></span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  [64] "Europe &amp; Central Asia"                               </span></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="do">##  [65] "Albania"                                             </span></span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  [66] "Croatia"                                             </span></span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  [67] "Sri Lanka"                                           </span></span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  [68] "East Asia &amp; Pacific"                                 </span></span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="do">##  [69] "Algeria"                                             </span></span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  [70] "Late-demographic dividend"                           </span></span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] "United States"                                       </span></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a><span class="do">##  [72] "Panama"                                              </span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [73] "Turkiye"                                             </span></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] "Poland"                                              </span></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] "East Asia &amp; Pacific (IDA &amp; IBRD countries)"          </span></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] "East Asia &amp; Pacific (excluding high income)"         </span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] "Uruguay"                                             </span></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] "Argentina"                                           </span></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] "Bosnia and Herzegovina"                              </span></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] "Lebanon"                                             </span></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] "Grenada"                                             </span></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] "Central Europe and the Baltics"                      </span></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] "Malaysia"                                            </span></span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] "Slovak Republic"                                     </span></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] "Upper middle income"                                 </span></span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] "Brunei Darussalam"                                   </span></span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] "Aruba"                                               </span></span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] "Turks and Caicos Islands"                            </span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] "North Macedonia"                                     </span></span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] "British Virgin Islands"                              </span></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] "Hungary"                                             </span></span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a><span class="do">##  [92] "Lithuania"                                           </span></span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] "Jordan"                                              </span></span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  [94] "Cabo Verde"                                          </span></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] "Morocco"                                             </span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a><span class="do">##  [96] "Sint Maarten (Dutch part)"                           </span></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] "Iran, Islamic Rep."                                  </span></span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  [98] "Nicaragua"                                           </span></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] "Montenegro"                                          </span></span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a><span class="do">## [100] "Tunisia"                                             </span></span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] "Cuba"                                                </span></span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a><span class="do">## [102] "Mauritius"                                           </span></span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] "Ecuador"                                             </span></span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a><span class="do">## [104] "Vietnam"                                             </span></span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] "West Bank and Gaza"                                  </span></span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] "Seychelles"                                          </span></span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] "Korea, Dem. People's Rep."                           </span></span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] "Latvia"                                              </span></span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] "Trinidad and Tobago"                                 </span></span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] "Romania"                                             </span></span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] "Colombia"                                            </span></span>
+<span id="cb19-113"><a href="#cb19-113" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] "Dominica"                                            </span></span>
+<span id="cb19-114"><a href="#cb19-114" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] "Samoa"                                               </span></span>
+<span id="cb19-115"><a href="#cb19-115" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] "Brazil"                                              </span></span>
+<span id="cb19-116"><a href="#cb19-116" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] "Middle East &amp; North Africa"                          </span></span>
+<span id="cb19-117"><a href="#cb19-117" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] "Serbia"                                              </span></span>
+<span id="cb19-118"><a href="#cb19-118" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] "Dominican Republic"                                  </span></span>
+<span id="cb19-119"><a href="#cb19-119" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] "Oman"                                                </span></span>
+<span id="cb19-120"><a href="#cb19-120" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] "Bangladesh"                                          </span></span>
+<span id="cb19-121"><a href="#cb19-121" aria-hidden="true" tabindex="-1"></a><span class="do">## [120] "Peru"                                                </span></span>
+<span id="cb19-122"><a href="#cb19-122" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] "Belarus"                                             </span></span>
+<span id="cb19-123"><a href="#cb19-123" aria-hidden="true" tabindex="-1"></a><span class="do">## [122] "Latin America &amp; Caribbean"                           </span></span>
+<span id="cb19-124"><a href="#cb19-124" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] "IBRD only"                                           </span></span>
+<span id="cb19-125"><a href="#cb19-125" aria-hidden="true" tabindex="-1"></a><span class="do">## [124] "Latin America &amp; the Caribbean (IDA &amp; IBRD countries)"</span></span>
+<span id="cb19-126"><a href="#cb19-126" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] "Syrian Arab Republic"                                </span></span>
+<span id="cb19-127"><a href="#cb19-127" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] "Armenia"                                             </span></span>
+<span id="cb19-128"><a href="#cb19-128" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] "Libya"                                               </span></span>
+<span id="cb19-129"><a href="#cb19-129" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] "Latin America &amp; Caribbean (excluding high income)"   </span></span>
+<span id="cb19-130"><a href="#cb19-130" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] "Kyrgyz Republic"                                     </span></span>
+<span id="cb19-131"><a href="#cb19-131" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] "Middle East &amp; North Africa (excluding high income)"  </span></span>
+<span id="cb19-132"><a href="#cb19-132" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] "Middle East &amp; North Africa (IDA &amp; IBRD countries)"   </span></span>
+<span id="cb19-133"><a href="#cb19-133" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] "Europe &amp; Central Asia (IDA &amp; IBRD countries)"        </span></span>
+<span id="cb19-134"><a href="#cb19-134" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] "Bhutan"                                              </span></span>
+<span id="cb19-135"><a href="#cb19-135" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] "Georgia"                                             </span></span>
+<span id="cb19-136"><a href="#cb19-136" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] "St. Kitts and Nevis"                                 </span></span>
+<span id="cb19-137"><a href="#cb19-137" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] "Bahamas, The"                                        </span></span>
+<span id="cb19-138"><a href="#cb19-138" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] "Tajikistan"                                          </span></span>
+<span id="cb19-139"><a href="#cb19-139" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] "Bulgaria"                                            </span></span>
+<span id="cb19-140"><a href="#cb19-140" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] "Europe &amp; Central Asia (excluding high income)"       </span></span>
+<span id="cb19-141"><a href="#cb19-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] "World"                                               </span></span>
+<span id="cb19-142"><a href="#cb19-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] "Greenland"                                           </span></span>
+<span id="cb19-143"><a href="#cb19-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] "St. Lucia"                                           </span></span>
+<span id="cb19-144"><a href="#cb19-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] "Caribbean small states"                              </span></span>
+<span id="cb19-145"><a href="#cb19-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [144] "Tonga"                                               </span></span>
+<span id="cb19-146"><a href="#cb19-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] "Mongolia"                                            </span></span>
+<span id="cb19-147"><a href="#cb19-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [146] "Uzbekistan"                                          </span></span>
+<span id="cb19-148"><a href="#cb19-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [147] "Arab World"                                          </span></span>
+<span id="cb19-149"><a href="#cb19-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [148] "El Salvador"                                         </span></span>
+<span id="cb19-150"><a href="#cb19-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [149] "Micronesia, Fed. Sts."                               </span></span>
+<span id="cb19-151"><a href="#cb19-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [150] "Venezuela, RB"                                       </span></span>
+<span id="cb19-152"><a href="#cb19-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [151] "Middle income"                                       </span></span>
+<span id="cb19-153"><a href="#cb19-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [152] "Jamaica"                                             </span></span>
+<span id="cb19-154"><a href="#cb19-154" aria-hidden="true" tabindex="-1"></a><span class="do">## [153] "Belize"                                              </span></span>
+<span id="cb19-155"><a href="#cb19-155" aria-hidden="true" tabindex="-1"></a><span class="do">## [154] "Vanuatu"                                             </span></span>
+<span id="cb19-156"><a href="#cb19-156" aria-hidden="true" tabindex="-1"></a><span class="do">## [155] "Iraq"                                                </span></span>
+<span id="cb19-157"><a href="#cb19-157" aria-hidden="true" tabindex="-1"></a><span class="do">## [156] "Solomon Islands"                                     </span></span>
+<span id="cb19-158"><a href="#cb19-158" aria-hidden="true" tabindex="-1"></a><span class="do">## [157] "Suriname"                                            </span></span>
+<span id="cb19-159"><a href="#cb19-159" aria-hidden="true" tabindex="-1"></a><span class="do">## [158] "Paraguay"                                            </span></span>
+<span id="cb19-160"><a href="#cb19-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [159] "Kazakhstan"                                          </span></span>
+<span id="cb19-161"><a href="#cb19-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [160] "Egypt, Arab Rep."                                    </span></span>
+<span id="cb19-162"><a href="#cb19-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [161] "Mexico"                                              </span></span>
+<span id="cb19-163"><a href="#cb19-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [162] "Honduras"                                            </span></span>
+<span id="cb19-164"><a href="#cb19-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [163] "IDA &amp; IBRD total"                                    </span></span>
+<span id="cb19-165"><a href="#cb19-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [164] "Low &amp; middle income"                                 </span></span>
+<span id="cb19-166"><a href="#cb19-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [165] "Ukraine"                                             </span></span>
+<span id="cb19-167"><a href="#cb19-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [166] "St. Vincent and the Grenadines"                      </span></span>
+<span id="cb19-168"><a href="#cb19-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [167] "Cambodia"                                            </span></span>
+<span id="cb19-169"><a href="#cb19-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [168] "Azerbaijan"                                          </span></span>
+<span id="cb19-170"><a href="#cb19-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [169] "Russian Federation"                                  </span></span>
+<span id="cb19-171"><a href="#cb19-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [170] "Philippines"                                         </span></span>
+<span id="cb19-172"><a href="#cb19-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [171] "Turkmenistan"                                        </span></span>
+<span id="cb19-173"><a href="#cb19-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [172] "Guatemala"                                           </span></span>
+<span id="cb19-174"><a href="#cb19-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [173] "Pacific island small states"                         </span></span>
+<span id="cb19-175"><a href="#cb19-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [174] "Moldova"                                             </span></span>
+<span id="cb19-176"><a href="#cb19-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [175] "Early-demographic dividend"                          </span></span>
+<span id="cb19-177"><a href="#cb19-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [176] "Nepal"                                               </span></span>
+<span id="cb19-178"><a href="#cb19-178" aria-hidden="true" tabindex="-1"></a><span class="do">## [177] "Lao PDR"                                             </span></span>
+<span id="cb19-179"><a href="#cb19-179" aria-hidden="true" tabindex="-1"></a><span class="do">## [178] "Small states"                                        </span></span>
+<span id="cb19-180"><a href="#cb19-180" aria-hidden="true" tabindex="-1"></a><span class="do">## [179] "Timor-Leste"                                         </span></span>
+<span id="cb19-181"><a href="#cb19-181" aria-hidden="true" tabindex="-1"></a><span class="do">## [180] "Sao Tome and Principe"                               </span></span>
+<span id="cb19-182"><a href="#cb19-182" aria-hidden="true" tabindex="-1"></a><span class="do">## [181] "South Asia"                                          </span></span>
+<span id="cb19-183"><a href="#cb19-183" aria-hidden="true" tabindex="-1"></a><span class="do">## [182] "South Asia (IDA &amp; IBRD)"                             </span></span>
+<span id="cb19-184"><a href="#cb19-184" aria-hidden="true" tabindex="-1"></a><span class="do">## [183] "Indonesia"                                           </span></span>
+<span id="cb19-185"><a href="#cb19-185" aria-hidden="true" tabindex="-1"></a><span class="do">## [184] "Kiribati"                                            </span></span>
+<span id="cb19-186"><a href="#cb19-186" aria-hidden="true" tabindex="-1"></a><span class="do">## [185] "India"                                               </span></span>
+<span id="cb19-187"><a href="#cb19-187" aria-hidden="true" tabindex="-1"></a><span class="do">## [186] "Fiji"                                                </span></span>
+<span id="cb19-188"><a href="#cb19-188" aria-hidden="true" tabindex="-1"></a><span class="do">## [187] "Senegal"                                             </span></span>
+<span id="cb19-189"><a href="#cb19-189" aria-hidden="true" tabindex="-1"></a><span class="do">## [188] "Other small states"                                  </span></span>
+<span id="cb19-190"><a href="#cb19-190" aria-hidden="true" tabindex="-1"></a><span class="do">## [189] "Lower middle income"                                 </span></span>
+<span id="cb19-191"><a href="#cb19-191" aria-hidden="true" tabindex="-1"></a><span class="do">## [190] "Eritrea"                                             </span></span>
+<span id="cb19-192"><a href="#cb19-192" aria-hidden="true" tabindex="-1"></a><span class="do">## [191] "Tanzania"                                            </span></span>
+<span id="cb19-193"><a href="#cb19-193" aria-hidden="true" tabindex="-1"></a><span class="do">## [192] "Pakistan"                                            </span></span>
+<span id="cb19-194"><a href="#cb19-194" aria-hidden="true" tabindex="-1"></a><span class="do">## [193] "Rwanda"                                              </span></span>
+<span id="cb19-195"><a href="#cb19-195" aria-hidden="true" tabindex="-1"></a><span class="do">## [194] "Gabon"                                               </span></span>
+<span id="cb19-196"><a href="#cb19-196" aria-hidden="true" tabindex="-1"></a><span class="do">## [195] "Guyana"                                              </span></span>
+<span id="cb19-197"><a href="#cb19-197" aria-hidden="true" tabindex="-1"></a><span class="do">## [196] "Myanmar"                                             </span></span>
+<span id="cb19-198"><a href="#cb19-198" aria-hidden="true" tabindex="-1"></a><span class="do">## [197] "Papua New Guinea"                                    </span></span>
+<span id="cb19-199"><a href="#cb19-199" aria-hidden="true" tabindex="-1"></a><span class="do">## [198] "Marshall Islands"                                    </span></span>
+<span id="cb19-200"><a href="#cb19-200" aria-hidden="true" tabindex="-1"></a><span class="do">## [199] "Sudan"                                               </span></span>
+<span id="cb19-201"><a href="#cb19-201" aria-hidden="true" tabindex="-1"></a><span class="do">## [200] "Ethiopia"                                            </span></span>
+<span id="cb19-202"><a href="#cb19-202" aria-hidden="true" tabindex="-1"></a><span class="do">## [201] "IDA only"                                            </span></span>
+<span id="cb19-203"><a href="#cb19-203" aria-hidden="true" tabindex="-1"></a><span class="do">## [202] "Tuvalu"                                              </span></span>
+<span id="cb19-204"><a href="#cb19-204" aria-hidden="true" tabindex="-1"></a><span class="do">## [203] "Madagascar"                                          </span></span>
+<span id="cb19-205"><a href="#cb19-205" aria-hidden="true" tabindex="-1"></a><span class="do">## [204] "Mauritania"                                          </span></span>
+<span id="cb19-206"><a href="#cb19-206" aria-hidden="true" tabindex="-1"></a><span class="do">## [205] "Least developed countries: UN classification"        </span></span>
+<span id="cb19-207"><a href="#cb19-207" aria-hidden="true" tabindex="-1"></a><span class="do">## [206] "Ghana"                                               </span></span>
+<span id="cb19-208"><a href="#cb19-208" aria-hidden="true" tabindex="-1"></a><span class="do">## [207] "Yemen, Rep."                                         </span></span>
+<span id="cb19-209"><a href="#cb19-209" aria-hidden="true" tabindex="-1"></a><span class="do">## [208] "Bolivia"                                             </span></span>
+<span id="cb19-210"><a href="#cb19-210" aria-hidden="true" tabindex="-1"></a><span class="do">## [209] "Nauru"                                               </span></span>
+<span id="cb19-211"><a href="#cb19-211" aria-hidden="true" tabindex="-1"></a><span class="do">## [210] "Congo, Rep."                                         </span></span>
+<span id="cb19-212"><a href="#cb19-212" aria-hidden="true" tabindex="-1"></a><span class="do">## [211] "Comoros"                                             </span></span>
+<span id="cb19-213"><a href="#cb19-213" aria-hidden="true" tabindex="-1"></a><span class="do">## [212] "IDA total"                                           </span></span>
+<span id="cb19-214"><a href="#cb19-214" aria-hidden="true" tabindex="-1"></a><span class="do">## [213] "Haiti"                                               </span></span>
+<span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a><span class="do">## [214] "Malawi"                                              </span></span>
+<span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a><span class="do">## [215] "Uganda"                                              </span></span>
+<span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a><span class="do">## [216] "Low income"                                          </span></span>
+<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a><span class="do">## [217] "Africa Eastern and Southern"                         </span></span>
+<span id="cb19-219"><a href="#cb19-219" aria-hidden="true" tabindex="-1"></a><span class="do">## [218] "South Africa"                                        </span></span>
+<span id="cb19-220"><a href="#cb19-220" aria-hidden="true" tabindex="-1"></a><span class="do">## [219] "Djibouti"                                            </span></span>
+<span id="cb19-221"><a href="#cb19-221" aria-hidden="true" tabindex="-1"></a><span class="do">## [220] "Heavily indebted poor countries (HIPC)"              </span></span>
+<span id="cb19-222"><a href="#cb19-222" aria-hidden="true" tabindex="-1"></a><span class="do">## [221] "Gambia, The"                                         </span></span>
+<span id="cb19-223"><a href="#cb19-223" aria-hidden="true" tabindex="-1"></a><span class="do">## [222] "Afghanistan"                                         </span></span>
+<span id="cb19-224"><a href="#cb19-224" aria-hidden="true" tabindex="-1"></a><span class="do">## [223] "Burundi"                                             </span></span>
+<span id="cb19-225"><a href="#cb19-225" aria-hidden="true" tabindex="-1"></a><span class="do">## [224] "Angola"                                              </span></span>
+<span id="cb19-226"><a href="#cb19-226" aria-hidden="true" tabindex="-1"></a><span class="do">## [225] "Togo"                                                </span></span>
+<span id="cb19-227"><a href="#cb19-227" aria-hidden="true" tabindex="-1"></a><span class="do">## [226] "Niger"                                               </span></span>
+<span id="cb19-228"><a href="#cb19-228" aria-hidden="true" tabindex="-1"></a><span class="do">## [227] "Kenya"                                               </span></span>
+<span id="cb19-229"><a href="#cb19-229" aria-hidden="true" tabindex="-1"></a><span class="do">## [228] "Fragile and conflict affected situations"            </span></span>
+<span id="cb19-230"><a href="#cb19-230" aria-hidden="true" tabindex="-1"></a><span class="do">## [229] "Zambia"                                              </span></span>
+<span id="cb19-231"><a href="#cb19-231" aria-hidden="true" tabindex="-1"></a><span class="do">## [230] "Botswana"                                            </span></span>
+<span id="cb19-232"><a href="#cb19-232" aria-hidden="true" tabindex="-1"></a><span class="do">## [231] "Liberia"                                             </span></span>
+<span id="cb19-233"><a href="#cb19-233" aria-hidden="true" tabindex="-1"></a><span class="do">## [232] "IDA blend"                                           </span></span>
+<span id="cb19-234"><a href="#cb19-234" aria-hidden="true" tabindex="-1"></a><span class="do">## [233] "Equatorial Guinea"                                   </span></span>
+<span id="cb19-235"><a href="#cb19-235" aria-hidden="true" tabindex="-1"></a><span class="do">## [234] "Cameroon"                                            </span></span>
+<span id="cb19-236"><a href="#cb19-236" aria-hidden="true" tabindex="-1"></a><span class="do">## [235] "Sub-Saharan Africa"                                  </span></span>
+<span id="cb19-237"><a href="#cb19-237" aria-hidden="true" tabindex="-1"></a><span class="do">## [236] "Sub-Saharan Africa (IDA &amp; IBRD countries)"           </span></span>
+<span id="cb19-238"><a href="#cb19-238" aria-hidden="true" tabindex="-1"></a><span class="do">## [237] "Sub-Saharan Africa (excluding high income)"          </span></span>
+<span id="cb19-239"><a href="#cb19-239" aria-hidden="true" tabindex="-1"></a><span class="do">## [238] "Sierra Leone"                                        </span></span>
+<span id="cb19-240"><a href="#cb19-240" aria-hidden="true" tabindex="-1"></a><span class="do">## [239] "Pre-demographic dividend"                            </span></span>
+<span id="cb19-241"><a href="#cb19-241" aria-hidden="true" tabindex="-1"></a><span class="do">## [240] "Benin"                                               </span></span>
+<span id="cb19-242"><a href="#cb19-242" aria-hidden="true" tabindex="-1"></a><span class="do">## [241] "Guinea-Bissau"                                       </span></span>
+<span id="cb19-243"><a href="#cb19-243" aria-hidden="true" tabindex="-1"></a><span class="do">## [242] "Mozambique"                                          </span></span>
+<span id="cb19-244"><a href="#cb19-244" aria-hidden="true" tabindex="-1"></a><span class="do">## [243] "Burkina Faso"                                        </span></span>
+<span id="cb19-245"><a href="#cb19-245" aria-hidden="true" tabindex="-1"></a><span class="do">## [244] "Namibia"                                             </span></span>
+<span id="cb19-246"><a href="#cb19-246" aria-hidden="true" tabindex="-1"></a><span class="do">## [245] "Zimbabwe"                                            </span></span>
+<span id="cb19-247"><a href="#cb19-247" aria-hidden="true" tabindex="-1"></a><span class="do">## [246] "Congo, Dem. Rep."                                    </span></span>
+<span id="cb19-248"><a href="#cb19-248" aria-hidden="true" tabindex="-1"></a><span class="do">## [247] "Mali"                                                </span></span>
+<span id="cb19-249"><a href="#cb19-249" aria-hidden="true" tabindex="-1"></a><span class="do">## [248] "Guinea"                                              </span></span>
+<span id="cb19-250"><a href="#cb19-250" aria-hidden="true" tabindex="-1"></a><span class="do">## [249] "Cote d'Ivoire"                                       </span></span>
+<span id="cb19-251"><a href="#cb19-251" aria-hidden="true" tabindex="-1"></a><span class="do">## [250] "Eswatini"                                            </span></span>
+<span id="cb19-252"><a href="#cb19-252" aria-hidden="true" tabindex="-1"></a><span class="do">## [251] "Africa Western and Central"                          </span></span>
+<span id="cb19-253"><a href="#cb19-253" aria-hidden="true" tabindex="-1"></a><span class="do">## [252] "Somalia"                                             </span></span>
+<span id="cb19-254"><a href="#cb19-254" aria-hidden="true" tabindex="-1"></a><span class="do">## [253] "South Sudan"                                         </span></span>
+<span id="cb19-255"><a href="#cb19-255" aria-hidden="true" tabindex="-1"></a><span class="do">## [254] "Central African Republic"                            </span></span>
+<span id="cb19-256"><a href="#cb19-256" aria-hidden="true" tabindex="-1"></a><span class="do">## [255] "Lesotho"                                             </span></span>
+<span id="cb19-257"><a href="#cb19-257" aria-hidden="true" tabindex="-1"></a><span class="do">## [256] "Nigeria"                                             </span></span>
+<span id="cb19-258"><a href="#cb19-258" aria-hidden="true" tabindex="-1"></a><span class="do">## [257] "Chad"                                                </span></span>
+<span id="cb19-259"><a href="#cb19-259" aria-hidden="true" tabindex="-1"></a><span class="do">## [258] "Andorra"                                             </span></span>
+<span id="cb19-260"><a href="#cb19-260" aria-hidden="true" tabindex="-1"></a><span class="do">## [259] "American Samoa"                                      </span></span>
+<span id="cb19-261"><a href="#cb19-261" aria-hidden="true" tabindex="-1"></a><span class="do">## [260] "Curacao"                                             </span></span>
+<span id="cb19-262"><a href="#cb19-262" aria-hidden="true" tabindex="-1"></a><span class="do">## [261] "Cayman Islands"                                      </span></span>
+<span id="cb19-263"><a href="#cb19-263" aria-hidden="true" tabindex="-1"></a><span class="do">## [262] "Not classified"                                      </span></span>
+<span id="cb19-264"><a href="#cb19-264" aria-hidden="true" tabindex="-1"></a><span class="do">## [263] "Monaco"                                              </span></span>
+<span id="cb19-265"><a href="#cb19-265" aria-hidden="true" tabindex="-1"></a><span class="do">## [264] "Northern Mariana Islands"                            </span></span>
+<span id="cb19-266"><a href="#cb19-266" aria-hidden="true" tabindex="-1"></a><span class="do">## [265] "Palau"                                               </span></span>
+<span id="cb19-267"><a href="#cb19-267" aria-hidden="true" tabindex="-1"></a><span class="do">## [266] "San Marino"</span></span>
+<span id="cb19-268"><a href="#cb19-268" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data_long<span class="sc">$</span>Year) </span>
+<span id="cb19-269"><a href="#cb19-269" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 1971 1972 1973 1974</span></span>
+<span id="cb19-270"><a href="#cb19-270" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] 1975 1976 1977 1978 1979 1980 1981 1982 1983 1984 1985 1986 1987 1988 1989</span></span>
+<span id="cb19-271"><a href="#cb19-271" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] 1990 1991 1992 1993 1994 1995 1996 1997 1998 1999 2000 2001 2002 2003 2004</span></span>
+<span id="cb19-272"><a href="#cb19-272" aria-hidden="true" tabindex="-1"></a><span class="do">## [46] 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019</span></span>
+<span id="cb19-273"><a href="#cb19-273" aria-hidden="true" tabindex="-1"></a><span class="do">## [61] 2020 2021</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Since all the values look correct, we check the missing value across each Country for the <em>Life.Exp</em> column:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>temp_df <span class="ot">&lt;-</span>data_long <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Country.Name) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Missing_Life_Exp =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(Life.Exp))) </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>temp_df  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 266 × 2
+   Country.Name                Missing_Life_Exp
+   &lt;chr&gt;                                  &lt;int&gt;
+ 1 Afghanistan                                0
+ 2 Africa Eastern and Southern                0
+ 3 Africa Western and Central                 0
+ 4 Albania                                    0
+ 5 Algeria                                    0
+ 6 American Samoa                            62
+ 7 Andorra                                   62
+ 8 Angola                                     0
+ 9 Antigua and Barbuda                        0
+10 Arab World                                 0
+# ℹ 256 more rows</code></pre>
+</div>
+</div>
+<p>To show only the rows with non-zero Missing Counts:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>data_long <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Country.Name) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Missing_Life_Exp =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(Life.Exp))) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Missing_Life_Exp <span class="sc">&gt;</span> <span class="dv">0</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   Country.Name             Missing_Life_Exp
+   &lt;chr&gt;                               &lt;int&gt;
+ 1 American Samoa                         62
+ 2 Andorra                                62
+ 3 Cayman Islands                         61
+ 4 Curacao                                 5
+ 5 Faroe Islands                          24
+ 6 Greenland                              18
+ 7 Israel                                  4
+ 8 Liechtenstein                          34
+ 9 Monaco                                 62
+10 Northern Mariana Islands               62
+11 Not classified                         62
+12 Palau                                  58
+13 San Marino                             62
+14 Seychelles                             20
+15 West Bank and Gaza                     30</code></pre>
+</div>
+</div>
+<p>Here we remove all rows with missing Life.Exp as they are not important for our analysis. na.omit is using baseR.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data_long <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(data_long) </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(data_long<span class="sc">$</span>Country.Name)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 260</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(data_long<span class="sc">$</span>Year)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 62</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>data_long </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15,866 × 3
+   Country.Name          Year Life.Exp
+   &lt;chr&gt;                &lt;int&gt;    &lt;dbl&gt;
+ 1 Hong Kong SAR, China  1960     65.9
+ 2 Hong Kong SAR, China  1961     66.6
+ 3 Hong Kong SAR, China  1962     67.0
+ 4 Hong Kong SAR, China  1963     67.7
+ 5 Hong Kong SAR, China  1964     68.4
+ 6 Hong Kong SAR, China  1965     69.3
+ 7 Hong Kong SAR, China  1966     69.5
+ 8 Hong Kong SAR, China  1967     69.9
+ 9 Hong Kong SAR, China  1968     70.4
+10 Hong Kong SAR, China  1969     70.6
+# ℹ 15,856 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="outlier-detection-with-boxplot" class="level2">
+<h2 class="anchored" data-anchor-id="outlier-detection-with-boxplot">Outlier Detection with boxplot</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_long, <span class="fu">aes</span>(<span class="at">x =</span> Country.Name, <span class="at">y =</span> Life.Exp)) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span>   </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Outlier Detection: There are 260 countries in the remaining dataset. However, it is hard to visualise with a boxplot.</p>
+<section id="tukey-fence-method" class="level3">
+<h3 class="anchored" data-anchor-id="tukey-fence-method">Tukey Fence Method</h3>
+<p>Here we use Tukey Outlier Detection method to identify the countries. We use the <strong>Tukey fence method</strong> to help to identify the countries with outliers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Q1Q3Quantiles <span class="ot">&lt;-</span> data_long <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Country.Name) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Q1 =</span> <span class="fu">quantile</span>(Life.Exp, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">Q3 =</span> <span class="fu">quantile</span>(Life.Exp, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">IQR =</span> <span class="fu">IQR</span>(Life.Exp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Lower_Bound =</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Upper_Bound =</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR)   </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>Q1Q3Quantiles  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 260 × 6
+   Country.Name                   Q1    Q3   IQR Lower_Bound Upper_Bound
+   &lt;chr&gt;                       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+ 1 Afghanistan                  38.3  58.6 20.4         7.72        89.1
+ 2 Africa Eastern and Southern  47.9  54.9  7.01       37.4         65.4
+ 3 Africa Western and Central   44.4  52.7  8.31       31.9         65.2
+ 4 Albania                      68.4  76.6  8.16       56.2         88.8
+ 5 Algeria                      47.2  72.3 25.0         9.66       110. 
+ 6 Angola                       41.2  52.2 11.0        24.8         68.6
+ 7 Antigua and Barbuda          72.1  75.8  3.74       66.5         81.4
+ 8 Arab World                   53.8  68.5 14.7        31.8         90.5
+ 9 Argentina                    67.1  75.1  7.99       55.1         87.1
+10 Armenia                      64.9  71.9  7.08       54.2         82.6
+# ℹ 250 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data_long_with_bounds <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data_long, Q1Q3Quantiles, <span class="at">by =</span> <span class="st">"Country.Name"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>outliers_detected <span class="ot">&lt;-</span> data_long_with_bounds <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Life.Exp <span class="sc">&lt;</span> Lower_Bound <span class="sc">|</span> Life.Exp <span class="sc">&gt;</span> Upper_Bound) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After checking the list of countries with outliers, they can be removed for our analysis. This decision depends on what is the objective of our analysis. Here we do not remove them.</p>
+<p>Next we check the summary statistics for the data across all countries. We again use <code>group_by</code> and <code>summarize</code> functions in <code>dplyr</code>. We can then use the summary statistics table to check with domain experts on the validity of the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>country_summary_stats <span class="ot">&lt;-</span> data_long <span class="sc">%&gt;%</span>   </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Country.Name) <span class="sc">%&gt;%</span>   </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(Life.Exp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),    </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">Median =</span> <span class="fu">median</span>(Life.Exp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),     </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD =</span> <span class="fu">sd</span>(Life.Exp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),     </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">Min =</span> <span class="fu">min</span>(Life.Exp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),     </span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">Max =</span> <span class="fu">max</span>(Life.Exp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),     </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">Count =</span> <span class="fu">n</span>(),     </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">Missing =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(Life.Exp)))  </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(country_summary_stats) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 260 × 8
+   Country.Name                 Mean Median    SD   Min   Max Count Missing
+   &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;   &lt;int&gt;
+ 1 Afghanistan                  47.9   46.3 10.8   32.5  63.6    62       0
+ 2 Africa Eastern and Southern  51.9   50.3  5.66  44.1  63.8    62       0
+ 3 Africa Western and Central   48.3   48.7  5.72  37.8  57.6    62       0
+ 4 Albania                      71.5   73.3  6.58  54.4  79.3    62       0
+ 5 Algeria                      61.4   67.4 12.9   39.3  76.5    62       0
+ 6 Angola                       46.7   42.8  7.92  37.3  62.4    62       0
+ 7 Antigua and Barbuda          73.2   73.5  4.11  61.6  78.8    62       0
+ 8 Arab World                   61.1   63.1  8.41  45.0  71.8    62       0
+ 9 Argentina                    71.1   72.1  4.37  64.0  77.3    62       0
+10 Armenia                      68.3   68.7  4.41  53.9  75.4    62       0
+# ℹ 250 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(data_long<span class="sc">$</span>Country.Name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 260</code></pre>
+</div>
+</div>
+<p>There should be 62 years of data for each country. We remove countries with less than 62 years of data. The <code>pull()</code> function extracts a specific column from the filtered data. Here, it pulls the values of the <em>Country.Name</em> column from the filtered rows where Count is less than 62.</p>
+<ol type="1">
+<li>Filter out country names with Count &lt; 62</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>countries_to_remove <span class="ot">&lt;-</span> country_summary_stats <span class="sc">%&gt;%</span>   </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Count <span class="sc">&lt;</span> <span class="dv">62</span>) <span class="sc">%&gt;%</span>   </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Country.Name)  </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>countries_to_remove</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Cayman Islands"     "Curacao"            "Faroe Islands"     
+[4] "Greenland"          "Israel"             "Liechtenstein"     
+[7] "Palau"              "Seychelles"         "West Bank and Gaza"</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Filter out these countries from data_long</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>data_long_filtered <span class="ot">&lt;-</span> data_long <span class="sc">%&gt;%</span>   </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>Country.Name <span class="sc">%in%</span> countries_to_remove) </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(data_long_filtered<span class="sc">$</span>Country.Name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 251</code></pre>
+</div>
+</div>
+<p>We can also plot some charts using ggplot to visualize the data and use it to discuss with domain experts. We can plot with <code>ggplot</code>:</p>
+<p>1. Histogram of Life.Exp for all the data</p>
+<p>2. Boxplot of Life.Exp by Year</p>
+<p>3. Boxplot of Life.Exp by Country for selected Countries</p>
+<p>4. Time series plots for selected countries</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram </span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_long_filtered, <span class="fu">aes</span>(<span class="at">x =</span> Life.Exp)) <span class="sc">+</span> </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Life Expectancy"</span>, <span class="at">x =</span> <span class="st">"Life Expectancy"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot of Life.Exp by Year </span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_long_filtered, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(Year), <span class="at">y =</span> Life.Exp)) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>)) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Life Expectancy by Year"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Life Expectancy"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Boxplot of Life.Exp by Country for top 20 highest Mean Life Expectancy across the years</p>
+<p>1. Extract the Top 20 countries’ Country.Name with <code>dplyr</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>top_20 <span class="ot">&lt;-</span> data_long_filtered <span class="sc">%&gt;%</span>   <span class="fu">group_by</span>(Country.Name) <span class="sc">%&gt;%</span>   </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">MeanLifeExp =</span> <span class="fu">mean</span>(Life.Exp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span>   </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(MeanLifeExp)) <span class="sc">%&gt;%</span>   <span class="fu">top_n</span>(<span class="dv">20</span>, MeanLifeExp) <span class="sc">%&gt;%</span>   </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Country.Name) </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>top_20 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Iceland"              "Japan"                "Sweden"              
+ [4] "Switzerland"          "Norway"               "Hong Kong SAR, China"
+ [7] "Netherlands"          "Canada"               "Spain"               
+[10] "Italy"                "Australia"            "Macao SAR, China"    
+[13] "France"               "Channel Islands"      "Greece"              
+[16] "Gibraltar"            "New Zealand"          "United Kingdom"      
+[19] "Euro area"            "Denmark"             </code></pre>
+</div>
+</div>
+<p>2. Filter these countries with <code>dplyr</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data_top_20 <span class="ot">&lt;-</span> data_long_filtered <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Country.Name <span class="sc">%in%</span> top_20) </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data_top_20<span class="sc">$</span>Country.Name) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Hong Kong SAR, China" "Macao SAR, China"     "Japan"               
+ [4] "Switzerland"          "Australia"            "Spain"               
+ [7] "Norway"               "Sweden"               "Iceland"             
+[10] "Italy"                "Canada"               "France"              
+[13] "New Zealand"          "Euro area"            "Netherlands"         
+[16] "Denmark"              "Channel Islands"      "United Kingdom"      
+[19] "Greece"               "Gibraltar"           </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>data_top_20[data_top_20<span class="sc">$</span>Country.Name<span class="sc">==</span><span class="st">'Singapore'</span>,] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 3
+# ℹ 3 variables: Country.Name &lt;chr&gt;, Year &lt;int&gt;, Life.Exp &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>data_top_20_sg <span class="ot">&lt;-</span> data_long_filtered <span class="sc">%&gt;%</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Country.Name <span class="sc">%in%</span> top_20 <span class="sc">|</span> Country.Name <span class="sc">==</span> <span class="st">'Singapore'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>3. Plot the Boxplot for Top 20 countries and Singapore</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_top_20_sg, <span class="fu">aes</span>(<span class="at">x =</span> Country.Name, <span class="at">y =</span> Life.Exp)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 20 Countries by Mean Life Expectancy"</span>, <span class="at">x =</span> <span class="st">"Country"</span>, <span class="at">y =</span> <span class="st">"Life Expectancy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder by descending mean Life.Exp (-Life,Exp for descending)</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_top_20_sg, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Country.Name, <span class="sc">-</span>Life.Exp, <span class="at">FUN =</span> mean), <span class="at">y =</span> Life.Exp)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 20 Countries by Mean Life Expectancy"</span>, <span class="at">x =</span> <span class="st">"Country"</span>, <span class="at">y =</span> <span class="st">"Life Expectancy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can also plot time series for the Top 20 countries to visualize the trends.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the time series plot </span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>tseries <span class="ot">&lt;-</span><span class="fu">ggplot</span>(data_top_20, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Life.Exp, <span class="at">color =</span> Country.Name)) <span class="sc">+</span>   <span class="fu">geom_line</span>() <span class="sc">+</span>   </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>   </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Life Expectancy Over Time"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Life Expectancy"</span>, <span class="at">color =</span> <span class="st">"Country"</span>)  </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>tseries </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>tseries <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">filter</span>(data_top_20_sg, Country.Name <span class="sc">==</span> <span class="st">"Singapore"</span>),              <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Life.Exp), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Congratulations! We have completed a quick introduction to dplyr, tidyr and ggplot. Remember, the best way <strong>to learn</strong> is to get your hands dirty, google for sample codes, read R documentation and learn when you are trying to solve problems.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

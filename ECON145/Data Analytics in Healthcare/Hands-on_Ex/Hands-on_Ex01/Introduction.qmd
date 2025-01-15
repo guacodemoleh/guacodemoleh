@@ -28,7 +28,7 @@ Within the core tidyverse library, the core packages used for data wrangling are
 
 This exercise will leverage World Bank's 2023 data.
 
-```{r, collapse=TRUE}
+```{r}
 data <- read.csv("2023_WorldBank.csv", stringsAsFactors = FALSE)
 
 head(data)

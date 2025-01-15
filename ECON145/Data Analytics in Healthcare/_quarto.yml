@@ -6,16 +6,15 @@ website:
   navbar:
     left:
       - text: "Hands-on Exercises"
-      menu: 
-         - href: Hands-on_Ex/Hands-on_Ex01/Introduction.qmd
-         text: "1. Introduction"
-         
-
+        menu: 
+          - text: "1. Introduction"
+            href: "Hands-on_Ex/Hands-on_Ex01/Introduction.html"
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
+    warning: false
 
 editor: visual
 

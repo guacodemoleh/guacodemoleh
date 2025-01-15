@@ -6,19 +6,28 @@ output: html_document
 ---
 
 "dplyr" and "tidyr" packages are powerful R packages for data manipulation.
+
 ```{r}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 ```
 
-Core tidyverse Packages:
-ggplot2: For data visualization, creating graphics and plots based on the grammar of graphics.
-dplyr: For data manipulation, including filtering, selecting, mutating, summarizing, and arranging data.
-tidyr: For tidying data, making datasets easy to manipulate (e.g., reshaping data, handling missing values).
+Core tidyverse Packages: ggplot2: For data visualization, creating graphics and plots based on the grammar of graphics. dplyr: For data manipulation, including filtering, selecting, mutating, summarizing, and arranging data. tidyr: For tidying data, making datasets easy to manipulate (e.g., reshaping data, handling missing values).
 
 ```{r}
-file_path="D:\\1_Teaching_Work_Folder\\SMU\\ECON145_Intro to Healthcare Analytics\\2024\\3. Lecture Notes\\Lecture 3 - Healthcare Data Management\\R 2021\\1. WB_LifeExpectancy - data wrangling"
+file_path <- "C://guacodemoleh/ECON145/Data Analytics in Healthcare/Hands-on_Ex/Hands-on_Ex01"
+WHO <- read.csv(file.path(file_path, "WHO.csv"))
+WHO
+
+# Version that skips the first 2 columns
+WHO1 <- read.csv(file.path(file_path, "WHO.csv"))[-c(1:2)]
+WHO1
+
+# Version that removes the first row of data
+WHO2 <- WHO[-1,]
+rownames(WHO2) <- NULL
+WHO2
 
 data <- read.csv(file.path(file_path, "2023_WorldBank.csv"), stringsAsFactors = FALSE)
 head(data)
@@ -27,18 +36,13 @@ colnames(data)
 summary(data)
 ```
 
-"Country.Code", "Indicator.Name", "Indicator.Code" are not important. We drop them with dplyr select statement. 
-You can also use baseR alternative: `data <- data[, !names(data) %in% c("Country.Code", "Indicator.Name", "Indicator.Code")]`
+"Country.Code", "Indicator.Name", "Indicator.Code" are not important. We drop them with dplyr select statement. You can also use baseR alternative: `data <- data[, !names(data) %in% c("Country.Code", "Indicator.Name", "Indicator.Code")]`
 
-Data appears to be in wide format, each year is in a column. We can use tidyr to make this into a tidy data and recode column names as the year of observation. 
+Data appears to be in wide format, each year is in a column. We can use tidyr to make this into a tidy data and recode column names as the year of observation.
 
 tidyr is another R package from the tidyverse family, designed to help users clean and organize data into a tidy format. The primary goal of tidyr is to make data "tidy," meaning that each variable is a column, each observation is a row, and each value is a single cell. tidyr works closely with other packages like dplyr to simplify data manipulation workflows.
 
-Key functions of tidyr include:
-gather() / pivot_longer(): Converts wide data (where columns are variables) into long format (where each row represents a single observation of a variable).
-spread() / pivot_wider(): The reverse of pivot_longer(), it converts long data into wide format.
-separate(): Splits a single column into multiple columns based on a delimiter.
-unite(): Combines multiple columns into a single column.
+Key functions of tidyr include: gather() / pivot_longer(): Converts wide data (where columns are variables) into long format (where each row represents a single observation of a variable). spread() / pivot_wider(): The reverse of pivot_longer(), it converts long data into wide format. separate(): Splits a single column into multiple columns based on a delimiter. unite(): Combines multiple columns into a single column.
 
 ```{r}
 data <- dplyr::select(data, -c(Country.Code, Indicator.Name, Indicator.Code))
@@ -55,17 +59,12 @@ data_long$Year <- as.integer(sub("X", "", data_long$Year))
 str(data_long)
 colnames(data_long)
 ```
+
 dplyr is an R package used for data manipulation and transformation. It is part of the tidyverse, a collection of R packages designed for data science. dplyr provides a set of functions that make it easier to work with data frames and manipulate them in a clear, concise, and efficient way.
 
-Key features of dplyr include:
-Pipes (%>%): Allows chaining multiple operations in a readable manner.
+Key features of dplyr include: Pipes (%\>%): Allows chaining multiple operations in a readable manner.
 
-Core Functions:
-select(): Choose columns.
-filter(): Filter rows based on conditions.
-mutate(): Create new columns or modify existing ones.
-summarize(): Aggregate data, often combined with group_by() to create group-wise summaries.
-group_by(): Group data by one or more variables, which is useful for applying functions like summarize().
+Core Functions: select(): Choose columns. filter(): Filter rows based on conditions. mutate(): Create new columns or modify existing ones. summarize(): Aggregate data, often combined with group_by() to create group-wise summaries. group_by(): Group data by one or more variables, which is useful for applying functions like summarize().
 
 ```{r}
 data_long %>%
@@ -95,10 +94,6 @@ data_long
 
 ```
 
-
-
-
-
 ```{r}
 # Outlier Detection with boxplot
 ggplot(data_long, aes(x = Country.Name, y = Life.Exp)) +
@@ -107,9 +102,9 @@ ggplot(data_long, aes(x = Country.Name, y = Life.Exp)) +
 
 ```
 
-Outlier Detection: There are 260 countries in the remaining dataset. It is hard to visualize with a boxplot. Here we use Tukey Outlier Detection method to identify the countries. We use the Tukey fence method to help to identify the countries with outliers. 
+Outlier Detection: There are 260 countries in the remaining dataset. It is hard to visualize with a boxplot. Here we use Tukey Outlier Detection method to identify the countries. We use the Tukey fence method to help to identify the countries with outliers.
 
-``` {r}
+```{r}
 
 Q1Q3Quantiles <- data_long %>%
   group_by(Country.Name) %>%
@@ -148,9 +143,7 @@ print(country_summary_stats)
 length(unique(data_long$Country.Name))
 ```
 
-There should be 62 years of data for each country. We remove countries with less than 62 years of data.
-The pull() function extracts a specific column from the filtered data.
-Here, it pulls the values of the Country.Name column from the filtered rows where Count is less than 62.
+There should be 62 years of data for each country. We remove countries with less than 62 years of data. The pull() function extracts a specific column from the filtered data. Here, it pulls the values of the Country.Name column from the filtered rows where Count is less than 62.
 
 ```{r}
 # 1. Filter out country names with Count < 62
@@ -165,12 +158,7 @@ data_long_filtered <- data_long %>%
 length(unique(data_long_filtered$Country.Name))
 ```
 
-We can also plot some charts using ggplot to visualize the data and use it to discuss with domain experts.
-We can plot with ggplot:
-1. Histogram of Life.Exp for all the data
-2. Boxplot of Life.Exp by Year
-3. Boxplot of Life.Exp by Country for selected Countries
-4. Time series plots for selected countries
+We can also plot some charts using ggplot to visualize the data and use it to discuss with domain experts. We can plot with ggplot: 1. Histogram of Life.Exp for all the data 2. Boxplot of Life.Exp by Year 3. Boxplot of Life.Exp by Country for selected Countries 4. Time series plots for selected countries
 
 ```{r}
 # Histogram
@@ -246,6 +234,5 @@ tseries +
             size = 1.5)
 
 ```
-
 
 Congratulations! We have completed a quick introduction to dplyr, tidyr and ggplot. Remember, the best way **to learn** is to get your hands dirty, google for sample codes, read R documentation and learn when you are trying to solve problems.
